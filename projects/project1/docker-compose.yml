@@ -1,0 +1,23 @@
+version: '3'
+services:
+  project1-php-cli:
+    extends:
+      file: ./../../templates/base.yml
+      service: php-cli
+    build:
+      args:
+        PHP_CLI_IMAGE: php:7.4.33-zts-bullseye
+    volumes:
+      - ./www:/www
+  project1-php-fpm:
+    extends:
+      file: ./../../templates/base.yml
+      service: php-fpm
+    build:
+      args:
+        PHP_FPM_ALPINE_IMAGE: php:7.4.33-fpm-alpine3.16
+    volumes:
+      - ./../:/projects
+networks:
+  docker_shared_network:
+    external: true

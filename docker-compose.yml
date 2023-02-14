@@ -1,0 +1,42 @@
+version: "3.7"
+services:
+    gateway:
+        build:
+            context: gateway/docker
+            dockerfile: development/nginx/Dockerfile
+        ports:
+            - "8080:8080"
+            - "80:80"
+        volumes:
+            - ./projects:/projects
+        networks:
+          - shared_network
+    db:
+      image: mysql:5.7.24
+      container_name: mysql
+      command: "--default-authentication-plugin=mysql_native_password"
+      restart: unless-stopped
+      tty: true
+      ports:
+        - 3306:3306
+      environment:
+        MYSQL_DATABASE: webimar_laravel
+        MYSQL_USER: webimar_laravel
+        MYSQL_PASSWORD: webimar_laravel
+        MYSQL_ROOT_PASSWORD: webimar_laravel
+        SERVICE_TAGS: dev
+        SERVICE_NAME: mysql
+      volumes:
+        - ./mysql/data:/var/lib/mysql/
+        - ./mysql/conf/my.cnf:/etc/mysql/my.cnf
+    phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      container_name: phpmyadmin
+      environment:
+        PMA_HOST: db
+        PMA_PORT: 3306
+      ports:
+        - 50600:80
+networks:
+  shared_network:
+    driver: bridge

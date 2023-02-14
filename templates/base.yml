@@ -1,0 +1,22 @@
+version: "3.7"
+services:
+    php-fpm:
+        build:
+            context: ./php-fpm
+            dockerfile: Dockerfile
+            args:
+                PHP_FPM_ALPINE_IMAGE: php:8.1.12-fpm-alpine3.16
+        environment:
+            APP_ENV: dev
+            APP_DEBUG: 1
+        networks:
+          - docker_shared_network
+    php-cli:
+        build:
+            context: ./php-cli
+            dockerfile: Dockerfile
+            args:
+                PHP_CLI_IMAGE: php:8.1.12-zts-bullseye
+        environment:
+            APP_ENV: dev
+            APP_DEBUG: 1
